@@ -1,22 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import css from './Contacts.module.css';
 import { RiDeleteBin6Line } from 'react-icons/ri';
-import { useDispatch, useSelector } from 'react-redux';
-import { deleteContact } from 'redux/contactsSlice';
-import { contactsSelector, filterSelector } from 'redux/selectors';
 
-const Contacts = () => {
-  const contacts = useSelector(contactsSelector) 
-  const filter = useSelector(filterSelector)
-  const dispatch = useDispatch();
-
-const normalizedFilter = filter?.toLowerCase();
-
-const filterContacts = contacts?.filter(contact=>contact.name.toLowerCase().includes(normalizedFilter))
-
+const Contacts = ({ contacts, onDeleteContact }) => {
   return (
     <ul className={css.contactsList}>
-      {filterContacts?.map(({ name, id, number }) => {
+      {contacts?.map(({ name, id, number }) => {
         return (
           <li key={id} className={css.item}>
             <span>
@@ -25,7 +15,7 @@ const filterContacts = contacts?.filter(contact=>contact.name.toLowerCase().incl
             <button
               className={css.deleteBtn}
               type="button"
-              onClick={() => dispatch(deleteContact(id))}
+              onClick={() => onDeleteContact(id)}
             >
               Delete <RiDeleteBin6Line />
             </button>
@@ -36,5 +26,15 @@ const filterContacts = contacts?.filter(contact=>contact.name.toLowerCase().incl
   );
 };
 
+Contacts.propTypes = {
+  contacts: PropTypes.arrayOf(
+    PropTypes.exact({
+      name: PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired,
+      number: PropTypes.string.isRequired,
+    })
+  ),
+  onDeleteContact: PropTypes.func.isRequired,
+};
 
 export default Contacts;
