@@ -1,21 +1,45 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
 import css from './Contacts.module.css';
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteContactsThunk, getContactsThunk } from 'redux/contacts.thunk';
+import { getContacts, getFilter } from 'redux/selectors';
 
-const Contacts = ({ contacts, onDeleteContact }) => {
+const Contacts = () => {
+  const contacts = useSelector(getContacts)
+  const dispatch = useDispatch();
+  const filter = useSelector(getFilter)
+
+
+useEffect(() => {
+dispatch(getContactsThunk())
+}, [dispatch])
+
+const filterContact = () => {
+  if (filter === ''){
+    return contacts;
+  }
+   const data = contacts?.filter(contact =>
+    contact.name.toLowerCase().includes(filter?.toLowerCase())
+    );
+    return data;
+  };
+  
+ const filterContacts = filterContact();
+
+
   return (
     <ul className={css.contactsList}>
-      {contacts?.map(({ name, id, number }) => {
+      {filterContacts?.map(({ name, id, phone }) => {
         return (
           <li key={id} className={css.item}>
             <span>
-              {name}: {number}
+              {name}: {phone}
             </span>
             <button
               className={css.deleteBtn}
               type="button"
-              onClick={() => onDeleteContact(id)}
+              onClick={() => dispatch( deleteContactsThunk(id))}
             >
               Delete <RiDeleteBin6Line />
             </button>
@@ -26,15 +50,6 @@ const Contacts = ({ contacts, onDeleteContact }) => {
   );
 };
 
-Contacts.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.exact({
-      name: PropTypes.string.isRequired,
-      id: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ),
-  onDeleteContact: PropTypes.func.isRequired,
-};
+
 
 export default Contacts;
