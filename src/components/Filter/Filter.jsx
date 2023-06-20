@@ -4,11 +4,11 @@ import css from './Filter.module.css';
 import { FcSearch } from 'react-icons/fc';
 import { useDispatch, useSelector } from 'react-redux';
 import { filterSearch } from 'redux/contactsSlice';
-import { getFilter } from 'redux/selectors';
+import { getFilter} from 'redux/selectors';
 
 const Filter = () => {
 const dispatch = useDispatch();
-const search = useSelector(getFilter);
+  const search = useSelector(getFilter);
 
   return (
     <div className={css.filterWrapper}>

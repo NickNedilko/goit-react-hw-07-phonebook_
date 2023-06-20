@@ -7,7 +7,6 @@ export const getContactsThunk = createAsyncThunk(
     const { data } = await axios.get(
       'https://645675fa5f9a4f236144c964.mockapi.io/contacts'
     );
-
     return data;
   }
 );
